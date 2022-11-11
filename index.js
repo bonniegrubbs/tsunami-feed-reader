@@ -1,53 +1,53 @@
-import express from 'express'
-import { read } from 'feed-reader'
+// Fork of https://github.com/ndaidong/feed-reader/tree/main/examples/node-feed-reader
 
-const app = express()
+import express from "express";
+import { read } from "feed-reader";
+
+const app = express();
 
 const meta = {
-  service: 'feed-reader',
-  lang: 'javascript',
-  server: 'express',
-  platform: 'node'
-}
+  service: "feed-reader",
+  lang: "javascript",
+  server: "express",
+  platform: "node",
+};
 
-app.get('/', async (req, res) => {
-  const url = req.query.url
-  if (!url) {
-    return res.json(meta)
-  }
-
+app.get("/", async (req, res) => {
   const {
-    includeEntryContent = 'n',
-    includeOptionalElements = 'n',
-    useISODateFormat = 'y',
-    normalization = 'y'
-  } = req.query
+    includeEntryContent = "n",
+    includeOptionalElements = "n",
+    useISODateFormat = "y",
+    normalization = "y",
+  } = req.query;
 
   const opts = {
-    includeEntryContent: includeEntryContent === 'y',
-    includeOptionalElements: includeOptionalElements === 'y',
-    useISODateFormat: useISODateFormat !== 'n',
-    normalization: normalization !== 'n'
-  }
+    includeEntryContent: includeEntryContent === "y",
+    includeOptionalElements: includeOptionalElements === "y",
+    useISODateFormat: useISODateFormat !== "n",
+    normalization: normalization !== "n",
+  };
 
   try {
-    const data = await read(url, opts)
+    const data = await read(
+      "https://www.tsunami.gov/events/xml/PAAQAtom.xml",
+      opts
+    );
     return res.json({
       error: 0,
-      message: 'feed data has been extracted successfully',
+      message: "feed data has been extracted successfully",
       data,
-      meta
-    })
+      meta,
+    });
   } catch (err) {
     return res.json({
       error: 1,
       message: err.message,
       data: null,
-      meta
-    })
+      meta,
+    });
   }
-})
+});
 
 app.listen(3103, () => {
-  console.log('Server is running at http://localhost:3103')
-})
+  console.log("Server is running at http://localhost:3103");
+});
